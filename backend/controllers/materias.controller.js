@@ -2,26 +2,18 @@ const Materia = require("../models/Materia")
 
 
 async function obtenerMaterias(req, res){  //Ruta donde se tomara la informacion  //req = request/pregunta/solicitud, res = respond/responder
-    try{
-        const materias = await Materia.find()
-        res.json(materias)
-    } catch(error){
-        manejarError(error, res)
-    }
+    const materias = await Materia.find()
+    res.json(materias)
 }
 
 async function obtenerMateria(req, res){
-    try{
-        const materia = await Materia.findOne ({codigo: String(req.params.codigo)})
-        if (!materia) {
-            return res.status(404).json({
-                mensaje: "Materia no encontrada"
-            })
-        }
-        res.json(materia)
-    } catch(error){
-        manejarError(error, res)
+    const materia = await Materia.findOne({codigo: String(req.params.codigo)})
+    if (!materia) {
+        return res.status(404).json({
+            mensaje: "Materia no encontrada"
+        })
     }
+    res.json(materia)
 }
 
 async function crearMateria(req, res){
