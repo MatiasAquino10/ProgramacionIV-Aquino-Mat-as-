@@ -19,7 +19,7 @@ app.use("/docentes", docentesRoutes)
 app.use("/materias", materiasRoutes)
 app.use("/auth", authRoutes)
 
-const PORT = process.env.PORT 
+const PORT = process.env.PORT || 3000
 
 conectarDB() 
 

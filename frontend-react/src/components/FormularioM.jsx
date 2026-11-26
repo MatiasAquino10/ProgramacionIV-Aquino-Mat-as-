@@ -1,5 +1,6 @@
 import { useState } from "react";
-const API_MATERIA = "http://localhost:3000/materias"
+import API_URL from "../config/api"
+const API_MATERIA = `${API_URL}/materias`
 
 
 export function FormularioM({onMateriaCreado, materiaEditar, onCancelar}){

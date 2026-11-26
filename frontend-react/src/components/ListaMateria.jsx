@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
-const API_MATERIAS = "http://localhost:3000/materias"
+import API_URL from "../config/api"
+const API_MATERIAS = `${API_URL}/materias`
 
 export function ListaMaterias({actualizar, onMateriaCreado, onEditarMateria}){
     const [materia, setMateria] = useState([])
