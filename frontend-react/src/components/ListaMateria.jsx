@@ -2,11 +2,13 @@ import { useEffect, useState } from "react"
 import { Alert, Box, Button, Chip, Paper, Stack, Typography } from "@mui/material"
 import API_URL from "../config/api"
 const API_MATERIAS = `${API_URL}/materias`
+import { useAuth } from "../context/useAuth"
 
 export function ListaMaterias({actualizar, onMateriaCreado, onEditarMateria}){
     const [materia, setMateria] = useState([])
     const [cargando, setCargando] = useState(true)
     const [error, setError] = useState("")
+    const { token, usuario } = useAuth()
 
     async function eliminarMateria(codigo) {
         const confirmar = window.confirm("¿Estas seguro de querer eliminar el recurso?")
@@ -15,7 +17,8 @@ export function ListaMaterias({actualizar, onMateriaCreado, onEditarMateria}){
         } 
         try{
             const respuesta = await fetch(`${API_MATERIAS}/${codigo}`, {
-                method: "DELETE"
+                method: "DELETE",
+                headers: { Authorization: `Bearer ${token}` }
             })
             if (!respuesta.ok) {
                 throw new Error(`Error al eliminar el materia. Estado http: ${respuesta.status}`)
@@ -36,7 +39,9 @@ export function ListaMaterias({actualizar, onMateriaCreado, onEditarMateria}){
             setCargando (true)
             setError("")
             try {
-                const respuesta = await fetch(API_MATERIAS)
+                const respuesta = await fetch(API_MATERIAS, {
+                    headers: { Authorization: `Bearer ${token}` }
+                })
                 if(!respuesta.ok){
                   throw new Error ("No se pudo obtener la lista", respuesta.status)  
                 }
@@ -51,7 +56,7 @@ export function ListaMaterias({actualizar, onMateriaCreado, onEditarMateria}){
         }
 
         cargarMateria()
-    }, [actualizar])
+    }, [actualizar, token])
     if (cargando){
         return (
             <Paper component="section" elevation={0} sx={{ p: 3, border: 1, borderColor: "divider", borderRadius: 4 }}>
@@ -120,6 +125,7 @@ export function ListaMaterias({actualizar, onMateriaCreado, onEditarMateria}){
                                     </Box>
                                 </Stack>
                                 <Stack direction="row" spacing={1} sx={{ justifyContent: "flex-end" }}>
+                                    {usuario?.rol === "admin" && (
                                     <Button
                                         type="button"
                                         onClick={() => onEditarMateria(materia)}
@@ -128,6 +134,8 @@ export function ListaMaterias({actualizar, onMateriaCreado, onEditarMateria}){
                                     >
                                         Editar
                                     </Button>
+                                    )}
+                                    {usuario?.rol === "admin" && (
                                     <Button
                                         type="button"
                                         onClick={() => eliminarMateria(materia.codigo)}
@@ -137,6 +145,7 @@ export function ListaMaterias({actualizar, onMateriaCreado, onEditarMateria}){
                                     >
                                         Eliminar
                                     </Button>
+                                    )}
                                 </Stack>
                             </Paper>
                         ))}
