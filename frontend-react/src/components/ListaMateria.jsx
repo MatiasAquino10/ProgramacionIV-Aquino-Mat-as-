@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import { Alert, Box, Button, Chip, Paper, Stack, Typography } from "@mui/material"
 import API_URL from "../config/api"
 const API_MATERIAS = `${API_URL}/materias`
 
@@ -52,29 +53,95 @@ export function ListaMaterias({actualizar, onMateriaCreado, onEditarMateria}){
         cargarMateria()
     }, [actualizar])
     if (cargando){
-        return <p>Cargando Materias...</p>
+        return (
+            <Paper component="section" elevation={0} sx={{ p: 3, border: 1, borderColor: "divider", borderRadius: 4 }}>
+                <Typography color="text.secondary">Cargando materias...</Typography>
+            </Paper>
+        )
     }
     if (error){
-        return <p role="alert">{error}</p>
+        return <Alert severity="error" role="alert">{error}</Alert>
     }
     return(
-        <section className="sga-lista sga-lista--materias">
-        <h2>Materias</h2>
-        {materia.length ===0 ?(
-            <p>No hay materias registradas</p>    
-        ):  (
-            <ul style = {{listStyle:"none"}}>
-                {materia.map(materia=> (
-                <li key = {materia.codigo}> 
-                    {materia.codigo} - {materia.nombre} - {materia.cargaHoraria} - {materia.estado}
-                    <br />
-                    <button type="button" onClick={() => onEditarMateria(materia)}>Editar</button>
-                    <button type="button" onClick={() => eliminarMateria(materia.codigo)}>Eliminar</button>
-                </li>
-                ))}
-            </ul> 
-        )}
-        </section>
-
+        <Paper
+            component="section"
+            elevation={0}
+            sx={{
+                p: { xs: 2.5, sm: 3.5 },
+                border: 1,
+                borderColor: "divider",
+                borderRadius: 4,
+                bgcolor: "background.paper"
+            }}
+        >
+            <Typography component="h2" variant="h5" sx={{ mb: 2.5, fontWeight: 700 }}>
+                Materias
+            </Typography>
+            {materia.length === 0
+                ? (
+                    <Typography color="text.secondary">
+                        No hay materias registradas.
+                    </Typography>
+                )
+                : (
+                    <Stack
+                        component="ul"
+                        spacing={1.5}
+                        sx={{ listStyle: "none", p: 0, m: 0 }}
+                    >
+                        {materia.map(materia => (
+                            <Paper
+                                component="li"
+                                key={materia.codigo}
+                                elevation={0}
+                                sx={{
+                                    p: { xs: 2, sm: 2.5 },
+                                    border: 1,
+                                    borderColor: "divider",
+                                    borderRadius: 3,
+                                    display: "flex",
+                                    alignItems: { xs: "stretch", sm: "center" },
+                                    justifyContent: "space-between",
+                                    flexDirection: { xs: "column", sm: "row" },
+                                    gap: 2
+                                }}
+                            >
+                                <Stack
+                                    direction="row"
+                                    spacing={1.5}
+                                    sx={{ alignItems: "center", flexWrap: "wrap" }}
+                                >
+                                    <Chip label={`Código ${materia.codigo}`} color="primary" variant="outlined" size="small" />
+                                    <Box>
+                                        <Typography fontWeight={600}>{materia.nombre}</Typography>
+                                        <Typography variant="body2" color="text.secondary">
+                                            {materia.cargaHoraria} hs · {materia.estado}
+                                        </Typography>
+                                    </Box>
+                                </Stack>
+                                <Stack direction="row" spacing={1} sx={{ justifyContent: "flex-end" }}>
+                                    <Button
+                                        type="button"
+                                        onClick={() => onEditarMateria(materia)}
+                                        variant="outlined"
+                                        size="small"
+                                    >
+                                        Editar
+                                    </Button>
+                                    <Button
+                                        type="button"
+                                        onClick={() => eliminarMateria(materia.codigo)}
+                                        variant="outlined"
+                                        color="error"
+                                        size="small"
+                                    >
+                                        Eliminar
+                                    </Button>
+                                </Stack>
+                            </Paper>
+                        ))}
+                    </Stack>
+                )}
+        </Paper>
     )
 }

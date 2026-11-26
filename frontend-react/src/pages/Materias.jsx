@@ -17,7 +17,6 @@ export default function Materias() {
 
 return(
 <>
-  <main>
     <FormularioM key={materiaEditar?.codigo ?? "nuevo"}
     onMateriaCreado={materiaCreado}
     materiaEditar={materiaEditar}
@@ -25,6 +24,5 @@ return(
     <ListaMaterias actualizar={actualizar}
     onMateriaCreado={materiaCreado}
     onEditarMateria={seleccionarMateria}/> 
-    </main>
 </>
 )}
